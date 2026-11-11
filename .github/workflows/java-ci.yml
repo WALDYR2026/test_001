@@ -1,0 +1,36 @@
+name: Java Factorial CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Paso 1: descargar los archivos del repositorio
+      - name: Clonar repositorio
+        uses: actions/checkout@v7
+
+      # Paso 2: instalar Java 21
+      - name: Configurar Java 21
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # Paso 3: compilar el proyecto
+      - name: Compilar
+        run: mvn --batch-mode clean compile
+
+      # Paso 4: ejecutar las 6 pruebas JUnit
+      - name: Correr pruebas unitarias
+        run: mvn --batch-mode test
+
+      # Paso 5: mostrar el resultado del programa
+      - name: Ejecutar factorial
+        run: mvn --batch-mode -q exec:java
